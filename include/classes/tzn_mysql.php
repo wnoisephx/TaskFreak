@@ -99,7 +99,7 @@ class TznDbConnection {
                     			$this->_error['db'] = @mysqli_connect_error();
                 		} else if (defined("TZN_DB_ERROR_PAGE") && (constant("TZN_DB_ERROR_PAGE"))) {
                     			$_REQUEST['tznMessage'] = 'Can not connect to database<br />'
-                        		.@mysql_connect_error();
+                        		.@mysqli_connect_error();
                     			include TZN_DB_ERROR_PAGE;
                     			exit;
 				} else {
