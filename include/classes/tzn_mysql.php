@@ -132,6 +132,10 @@ class TznDbConnection {
 		}
 	}
 
+	function getdbLink() {
+		return $this->_dbLink;
+	}
+
     	function getTables() {
         	$arrTables = array();
         	if ($result = @mysqli_query($this->_dbLink,'SHOW TABLES')) {
@@ -144,7 +148,7 @@ class TznDbConnection {
     	}
 
     	function querySelect($qry) {
-		return new TznDbResult($qry,@mysqli_query($this->_dbLink,$qry),$this->_critical);
+		return new TznDbResult($qry,@mysqli_query($this->_dbLink,$qry),$this->_critical,$this->_dbLink);
 	}
 
 	function queryAffect($qry) {
@@ -156,7 +160,7 @@ class TznDbConnection {
                 			case 2:
 						$strError = '<code>'.htmlspecialchars($qry).'</code><br/>';
 					case 1:
-						$this->_error['db'] = 'Error SQL #'.mysqli_errno().': '.mysqli_error();
+						$this->_error['db'] = 'Error SQL #'.mysqli_errno($this->_dbLink).': '.mysqli_error($this->_dbLink);
                     				$strError .= $this->_error['db'];
                 			default:
                     				if ($this->_critical) {
@@ -196,8 +200,8 @@ class TznDbResult {
     var $_count;
     var $_idx;
 
-    function TznDbResult($qry,$result = null,$critical=true) {
-        if ($result) {
+    function TznDbResult($qry,$result=null,$critical=true,$dbLink=null) {
+	if ($result) {
         	if (TZN_DB_DEBUG == 3) {
         		echo "<code>".htmlspecialchars($qry)."</code><br/>";
         	}
@@ -207,26 +211,24 @@ class TznDbResult {
 			return $this->_count;
         } else {
             switch(TZN_DB_DEBUG) {
-            case 3:
-            case 2:
-                $strError = '<code>'.htmlspecialchars($qry).'</code><br/>';
-            case 1:
-                $this->_error['db'] = 'Error SQL #'.mysqli_errno().': '.mysqli_error();
-                $strError .= $this->_error['db'];
-            default:
-                if ($critical) {
-                    if (defined("TZN_DB_ERROR_PAGE") &&
-                        (constant("TZN_DB_ERROR_PAGE"))) 
-                    {
-                        $_REQUEST['tznMessage'] = 'SQL Error (select)<br />'
-                            .$strError;
-                        include TZN_DB_ERROR_PAGE;
-                        exit;
-                    } else {
-                        die('<div id="debug">SQL error (select)<br />'.$strError.'</div>');
-                    }
-                }
-                break;
+            	case 3:
+            	case 2:
+                	$strError = '<code>'.htmlspecialchars($qry).'</code><br/>';
+            	case 1:
+                	$this->_error['db'] = 'Error SQL #'.mysqli_errno($dbLink).': '.mysqli_error($dbLink);
+                	$strError .= $this->_error['db'];
+            	default:
+                	if ($critical) {
+                    		if (defined("TZN_DB_ERROR_PAGE") && (constant("TZN_DB_ERROR_PAGE"))) {
+                        		$_REQUEST['tznMessage'] = 'SQL Error (select)<br />'
+                            		.$strError;
+                        		include TZN_DB_ERROR_PAGE;
+                        		exit;
+                    		} else {
+                        		die('<div id="debug">SQL error (select)<br />'.$strError.'</div>');
+                    		}
+                	}
+                	break;
             }
             return false;
         }
@@ -286,21 +288,21 @@ class TznDbResult {
 		}
 	}
 
-    function rMore() {
-        if ($this->_idx < $this->_count) {
-            return true;
-        } else {
-            return false;
-        }
-    }
+    	function rMore() {
+        	if ($this->_idx < $this->_count) {
+            		return true;
+        	} else {
+            		return false;
+        	}
+    	}
 
-    function rFree() {
+    	function rFree() {
 		if ($this->_dbResult) {
 			@mysqli_free_result($this->_dbResult);
-          }
-        $this->_idx = 0;
-        $this->_count = 0;
-      }
+        	}
+        	$this->_idx = 0;
+        	$this->_count = 0;
+	}
 }
 
 /**
@@ -918,31 +920,30 @@ class TznDb extends Tzn {
 		}
 	}
     
-    /* -- Item functions ---------------------------------------- */
+    	/* -- Item functions ---------------------------------------- */
 
-    function add($ignore=false) {
-    	// create SQL statement
-		$strSql = 'INSERT '.(($ignore)?'IGNORE ':'')
-			.'INTO '.$this->gTable().' SET ';
+    	function add($ignore=false) {
+    		// create SQL statement
+		$strSql = 'INSERT '.(($ignore)?'IGNORE ':'') .'INTO '.$this->gTable().' SET ';
 		if ($this->id) {
 			$strSql .= $this->getIdKey()."='".$this->id."', ";
 		}
 		$strSql .= $this->zPropsToSql();
-		$this->getConnection();
+		$dbConnection = $this->getConnection();
 		if ($this->query($strSql)) {
-            $this->id = mysqli_insert_id();
+            		$this->id = mysqli_insert_id($dbConnection->getdbLink());
 			if (!$this->id) {
 				return true;
 			} else {
-    			return $this->id;
-            }
+    				return $this->id;
+            		}
 		} else {
 			return false;
 		} 
-    }
+    	}
 
 	function replace() {
-    	// create SQL statement
+    		// create SQL statement
 		$strSql = 'REPLACE INTO '.$this->gTable().' SET ';
 		if ($this->id) {
 			$strSql .= $this->getIdKey()."='".$this->id."', ";
@@ -951,13 +952,13 @@ class TznDb extends Tzn {
 		$this->getConnection();
 		if ($this->query($strSql)) {
 			if (!$this->id) {
-				$this->id = mysqli_insert_id();
+				$this->id = mysqli_insert_id($dbConnection->getdbLink();
 			}
 			return $this->id;
 		} else {
 			return false;
 		} 
-    }
+    	}
 
     function update($fields=null,$filter=null) {
     	// echo "<pre>--- UPDATE ---\r\n"; $this->dump(); echo "---\r\n";
@@ -1125,7 +1126,7 @@ class TznDb extends Tzn {
             $str = "'".addslashes($value)."'";
             /*
             if ($this->_dbConnection->_dbLink) {
-            	$str = '\''.mysqli_real_escape_string($value,$this->_dbConnection->_dbLink).'\'';
+            	$str = '\''.mysqli_real_escape_string($this->_dbConnection->_dbLink,$value).'\'';
             } else {
             	$str = "'".addslashes($value)."'";
             }
