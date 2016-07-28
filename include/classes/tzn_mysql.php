@@ -474,11 +474,11 @@ class TznDb extends Tzn {
 	var $_sqlHaving;
 	var $_sqlOrder;
     
-    function TznDb($table) {
-        $this->Tzn();
-        $this->_table = $table;
-        $this->_page = 1;
-    }
+    	function TznDb($table) {
+        	$this->Tzn();
+        	$this->_table = $table;
+        	$this->_page = 1;
+    	}
 	
 	function gTable($table=null) {
 		if (!$table) {
@@ -487,24 +487,24 @@ class TznDb extends Tzn {
 		return (@constant('TZN_DB_PREFIX')?TZN_DB_PREFIX.'_':'').$table;
 	}
     
-    function setPagination($pageSize,$page=1) {
-    	$this->_pageSize = intval($pageSize);
-    	$this->_page = intval($page);
-    }
+    	function setPagination($pageSize,$page=1) {
+    		$this->_pageSize = intval($pageSize);
+    		$this->_page = intval($page);
+    	}
     
    	function getIdKey() {
 		return $this->_table."Id";
-    }
+    	}
 
-    function getConnection($host=null, $user=null, $pass=null, $base=null) {
-        if (!is_object($this->_dbConnection)) {
-           $this->_dbConnection = new TznDbConnection($host,$user,$pass,$base);
-        }
+    	function getConnection($host=null, $user=null, $pass=null, $base=null) {
+        	if (!is_object($this->_dbConnection)) {
+           		$this->_dbConnection = new TznDbConnection($host,$user,$pass,$base);
+        	}
 		$this->_dbConnection->connect();
-        return $this->_dbConnection;
-    }
+        	return $this->_dbConnection;
+    	}
     
-    function query($qry) {
+    	function query($qry) {
 		global $pSqlQueryCount;
 		$pSqlQueryCount++;
 		if (DB_DEBUG_LEVEL == 3) {
@@ -519,56 +519,55 @@ class TznDb extends Tzn {
 		} else {
 			echo "no active connection to database - please call $db-&gt;getConnection first";
 		}
-    }
-    
-    function isLoaded() {
-    	return $this->_loaded;
-    }
-
-    /* -- Query Generator Methods  -------------------------------------- */
-    
-    function getObjId($key) {
-      $obj = $this->$key;
-      return $obj->id;
-    }
-    
-    function addWhere($data, $sep = 'AND') {
-		$this->_sqlWhere = $this->concatSQL($this->_sqlWhere, $data, $sep);
-    }
-    
-    function sqlWhere($default = '') {
-		return $this->concatSQL($this->_sqlWhere, $default, 'AND', ' WHERE');
-    }
-    
-    function addOrder($data,$default = '') {
-    	if ((!preg_match('/^[a-zA-Z0-9_\-\., ]+$/',$data)) || (empty($data))) {
-    		$data = $default;
     	}
-    	$this->_sqlOrder = $this->concatSQL($this->_sqlOrder, $data,',');
-    }
     
-    function sqlOrder($default = '') {
-    	return $this->concatSQL($this->_sqlOrder, $default, ',', ' ORDER BY');
-    }
+    	function isLoaded() {
+    		return $this->_loaded;
+    	}
+
+    	/* -- Query Generator Methods  -------------------------------------- */
+    	function getObjId($key) {
+      		$obj = $this->$key;
+      		return $obj->id;
+    	}
     
-    function addGroup($data) {
-    	$this->_sqlGroup = $this->concatSQL($this->_sqlGroup, $data, ',');
-    }
+    	function addWhere($data, $sep = 'AND') {
+		$this->_sqlWhere = $this->concatSQL($this->_sqlWhere, $data, $sep);
+    	}
     
-    function sqlGroup($default = '') {
-    	return $this->concatSQL($this->_sqlGroup,$default, ',',' GROUP BY');
-    }
+    	function sqlWhere($default = '') {
+		return $this->concatSQL($this->_sqlWhere, $default, 'AND', ' WHERE');
+    	}
+    
+    	function addOrder($data,$default = '') {
+    		if ((!preg_match('/^[a-zA-Z0-9_\-\., ]+$/',$data)) || (empty($data))) {
+    			$data = $default;
+    		}
+    		$this->_sqlOrder = $this->concatSQL($this->_sqlOrder, $data,',');
+    	}
+    
+    	function sqlOrder($default = '') {
+    		return $this->concatSQL($this->_sqlOrder, $default, ',', ' ORDER BY');
+    	}
+    
+    	function addGroup($data) {
+    		$this->_sqlGroup = $this->concatSQL($this->_sqlGroup, $data, ',');
+    	}
+    
+    	function sqlGroup($default = '') {
+    		return $this->concatSQL($this->_sqlGroup,$default, ',',' GROUP BY');
+    	}
 	
 	function addHaving($data,$sep = 'AND') {
-    	$this->_sqlHaving = $this->concatSQL($this->_sqlHaving, $data,$sep);
-    }
+    		$this->_sqlHaving = $this->concatSQL($this->_sqlHaving, $data,$sep);
+    	}
     
-    function sqlHaving($default = '') {
-    	return $this->concatSQL($this->_sqlHaving, $default, 'AND', ' HAVING');
-    }
+    	function sqlHaving($default = '') {
+    		return $this->concatSQL($this->_sqlHaving, $default, 'AND', ' HAVING');
+    	}
     
-    function sqlLimit() {
-    	// mySQL only
+    	function sqlLimit() {
+    		// mySQL only
 		if (!$this->_pageSize) {
 			return false; // no paging
 		}
@@ -578,37 +577,35 @@ class TznDb extends Tzn {
 		while ((($this->_page - 1) * $this->_pageSize) > $this->_total) {
 			$this->_page--;
 		}
-		return ' LIMIT '.($this->_page - 1) * $this->_pageSize.', '
-			.$this->_pageSize;
+		return ' LIMIT '.($this->_page - 1) * $this->_pageSize.', ' .$this->_pageSize;
 	}
     
-    /* -- Queries -------------------------------------------------------- */
-
-    function load() {
-        // load by Id
+    	/* -- Queries -------------------------------------------------------- */
+    	function load() {
+        	// load by Id
 		if ($this->id) {
-	        return $this->loadByKey($this->getIdKey(), $this->id);
+	        	return $this->loadByKey($this->getIdKey(), $this->id);
 		} else {
 			return false;
 		}	
 		/* else {
 			return $this->loadByFilter("1 LIMIT 0,1");
 		} */
-    }
+    	}
 
-    function loadByKey($key, $value=null) {
-	  if ($value == null) {
-		  $value = $this->get($key);
-	  }
-	  if (!preg_match('/^[a-z0-9\-_]+$/iD', $key.$value)) {
-	  	return false;	
-	  }
-      return $this->loadByFilter($this->gTable().".".$key." = '".$value."'");
-    }
+    	function loadByKey($key, $value=null) {
+	  	if ($value == null) {
+		  	$value = $this->get($key);
+	  	}
+	  	if (!preg_match('/^[a-z0-9\-_]+$/iD', $key.$value)) {
+	  		return false;	
+	  	}
+      		return $this->loadByFilter($this->gTable().".".$key." = '".$value."'");
+    	}
 
-    function loadByFilter($filter) {
-    	$this->_data = null;
-    	$this->_total = 0;
+    	function loadByFilter($filter) {
+    		$this->_data = null;
+    		$this->_total = 0;
 		if (!empty($filter)) {
 			$sqlSelect = "SELECT ".$this->gTable().".*";
 			$sqlFrom =" FROM ".$this->gTable();
@@ -620,39 +617,28 @@ class TznDb extends Tzn {
 					// -TODO- use var type instead of suffix
 					// -TODO- retreive table name
 					$tmpKey = substr($oKey,0,-5);
-					$sqlSelect .= ", count(DISTINCT ".$tmpKey."Id) as "
-						.$tmpKey."Count";
+					$sqlSelect .= ", count(DISTINCT ".$tmpKey."Id) as " .$tmpKey."Count";
 					$tmpIdKey = $this->getIdKey();
-					$sqlFrom .= " LEFT JOIN ".strtolower($tmpKey)." ON ".strtolower($tmpKey)."."
-						.$tmpIdKey."=".$this->gTable().".".$tmpIdKey;
+					$sqlFrom .= " LEFT JOIN ".strtolower($tmpKey)." ON ".strtolower($tmpKey)."." .$tmpIdKey."=".$this->gTable().".".$tmpIdKey;
 					$groupBy = true;
 				} else if ($oType == 'OBJ') {
 					$tmpObj = new $oKey();
-                    $tmpKey = $tmpObj->getIdKey();
+                    			$tmpKey = $tmpObj->getIdKey();
 					$tmpOnKey = $oKey."Id";
-					$sqlFrom .= " LEFT JOIN ".$tmpObj->gTable()." as ".$oKey
-						." ON ".$oKey.".".$tmpKey."="
-						.$this->gTable().".".$tmpOnKey;
-					forEach($tmpObj->_properties as $keyNested => $typeNested) 
-                    {
-                        if ((preg_match('/^UID/',$typeNested))
-							|| (preg_match('/(Count|Last)$/',$keyNested)))
-						{
-                            continue;
-                        } else if ($typeNested == 'OBJ') {
-                        	$tmpNestedObj = new $keyNested();
-                        	$tmpNestedKey = $tmpNestedObj->getIdKey();
-                        	/* $sqlSelect .= ", ".$tmpObj->_table.".".$tmpNestedKey
-                        		." as ".$oKey."_".$tmpNestedKey; */
-							$sqlSelect .= ", ".$oKey.".".$tmpNestedKey
-                        		." as ".$oKey."_".$tmpNestedKey;
-                        } else {
-							/* $sqlSelect .= ", ".$tmpObj->_table."."
-								.$keyNested." as ".$oKey.'_'.$keyNested; */
-							$sqlSelect .= ", ".$oKey."."
-								.$keyNested." as ".$oKey.'_'.$keyNested;
-                        }
-                    }
+					$sqlFrom .= " LEFT JOIN ".$tmpObj->gTable()." as ".$oKey ." ON ".$oKey.".".$tmpKey."=" .$this->gTable().".".$tmpOnKey;
+					forEach($tmpObj->_properties as $keyNested => $typeNested) {
+                       				if ((preg_match('/^UID/',$typeNested)) || (preg_match('/(Count|Last)$/',$keyNested))) {
+                       					continue;
+                       				} else if ($typeNested == 'OBJ') {
+                       					$tmpNestedObj = new $keyNested();
+                       					$tmpNestedKey = $tmpNestedObj->getIdKey();
+                       					/* $sqlSelect .= ", ".$tmpObj->_table.".".$tmpNestedKey ." as ".$oKey."_".$tmpNestedKey; */
+							$sqlSelect .= ", ".$oKey.".".$tmpNestedKey ." as ".$oKey."_".$tmpNestedKey;
+                       				} else {
+							/* $sqlSelect .= ", ".$tmpObj->_table."." .$keyNested." as ".$oKey.'_'.$keyNested; */
+							$sqlSelect .= ", ".$oKey."." .$keyNested." as ".$oKey.'_'.$keyNested;
+                       				}
+                    			}
 				}
 			}
 			$strSql = $sqlSelect.$sqlFrom.$sqlWhere." WHERE ".$filter;
@@ -663,71 +649,65 @@ class TznDb extends Tzn {
 		}
 		$this->_loaded = false;
 		return false;
-    }
+    	}
 
-    function loadByQuery($strSql) {
-        if ($strSql) {
-            $this->getConnection();
-            if ($result = $this->query($strSql)) {
-                if ($data = $result->rNext()) {
-                    $this->setAuto($data);
-                    $this->_loaded = true;
-                    if ($this->id) {
-                        return $this->id;
-                    } else {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
+    	function loadByQuery($strSql) {
+        	if ($strSql) {
+            		$this->getConnection();
+            		if ($result = $this->query($strSql)) {
+                		if ($data = $result->rNext()) {
+                    			$this->setAuto($data);
+                    			$this->_loaded = true;
+                    			if ($this->id) {
+                        			return $this->id;
+                    			} else {
+                        			return true;
+                    			}
+                		}
+            		}
+        	}
+        	return false;
+    	}
     
-    /* -- Loading List --------------------------------------------- */
-    
-    function loadCount($strCount='') {
-    	$className = get_class($this);
+    	/* -- Loading List --------------------------------------------- */
+    	function loadCount($strCount='') {
+    		$className = get_class($this);
 		if (empty($strCount)) {
-            $classModel = new $className();
-            $sqlCount = "SELECT COUNT(DISTINCT "
-            	.$this->gTable().".".$this->_table."Id) as rowCount";
+            		$classModel = new $className();
+            		$sqlCount = "SELECT COUNT(DISTINCT " .$this->gTable().".".$this->_table."Id) as rowCount";
 			if (!in_array('UID',$this->_properties)) {
 				$sqlCount = "SELECT COUNT(*) as rowCount";
 			}
-            $sqlFrom =" FROM ".$this->gTable();
-            $groupBy = false;
-            foreach($this->_properties as $key => $type) {
+            		$sqlFrom =" FROM ".$this->gTable();
+            		$groupBy = false;
+            		foreach($this->_properties as $key => $type) {
 				if (preg_match("/(Last|Count)$/",$key)) {
-                    $tmpKey = strtolower(substr($key,0,-5));
-                    $sqlFrom .= " LEFT JOIN ".$tmpKey." ON ".$tmpKey."."
-                    	.$this->getIdKey()."="
-                    	.$this->gTable().".".$this->getIdKey();
-                    $groupBy = true;
-                } else if ($type == 'OBJ') {
-                	$tmpObj = new $key();
-                    $tmpKey = $tmpObj->getIdKey();
+                    			$tmpKey = strtolower(substr($key,0,-5));
+                    			$sqlFrom .= " LEFT JOIN ".$tmpKey." ON ".$tmpKey."." .$this->getIdKey()."=" .$this->gTable().".".$this->getIdKey();
+                    			$groupBy = true;
+                		} else if ($type == 'OBJ') {
+                			$tmpObj = new $key();
+                    			$tmpKey = $tmpObj->getIdKey();
 					$tmpOnKey = $key."Id";
-                    $sqlFrom .= " LEFT JOIN ".$tmpObj->gTable()." as ".$key
-                    	." ON ".$key.".".$tmpKey."="
-                    	.$this->gTable().".".$tmpOnKey;
-                    // $groupBy = true;
-                }
-            }
-            unset($classModel);
-            if ($groupBy) {
-                $this->addGroup($this->gTable().".".$this->getIdKey());
-            }
+                    			$sqlFrom .= " LEFT JOIN ".$tmpObj->gTable()." as ".$key ." ON ".$key.".".$tmpKey."=" .$this->gTable().".".$tmpOnKey;
+                    			// $groupBy = true;
+                		}
+            		}
+            		unset($classModel);
+            		if ($groupBy) {
+                		$this->addGroup($this->gTable().".".$this->getIdKey());
+            		}
 
-            if (empty($strCount)) {
-                $strCount = $sqlCount.$sqlFrom.' '.$this->sqlWhere();
-                if ($groupBy) {
-                    $strCount .= ' '.$this->sqlGroup();   // GROUP BY clause
+            		if (empty($strCount)) {
+                		$strCount = $sqlCount.$sqlFrom.' '.$this->sqlWhere();
+                		if ($groupBy) {
+                    			$strCount .= ' '.$this->sqlGroup();   // GROUP BY clause
 					if ($this->_sqlHaving) {
 						$strCount .= ' '.$this->sqlHaving();
 					}
-                }
-            }
-        }
+                		}
+            		}
+        	}
 		// echo("<p>COUNT = ".$strCount."</p>");
 		$this->getConnection();
 		if ($result = $this->query($strCount)) {
@@ -740,71 +720,55 @@ class TznDb extends Tzn {
 		return false;
 	}
 
-    function loadList($sql1 = null, $sql2 = null) {
-        
-        $this->_data = null;
-        $this->_loaded = false;
-        $this->_total = 0;
+    	function loadList($sql1 = null, $sql2 = null) {
+        	$this->_data = null;
+        	$this->_loaded = false;
+        	$this->_total = 0;
 
-        if (!$sql1) {
-            $sqlSelect = 'SELECT '.$this->gTable().'.*';
-            $sqlFrom =' FROM '.$this->gTable();
-            $groupBy = false;
-            foreach($this->_properties as $key => $type) {
+        	if (!$sql1) {
+            		$sqlSelect = 'SELECT '.$this->gTable().'.*';
+            		$sqlFrom =' FROM '.$this->gTable();
+            		$groupBy = false;
+            		foreach($this->_properties as $key => $type) {
 				if (preg_match('/Count$/',$key)) {
 					// -TODO- use param type instead of suffix
-                    $tmpKey = substr($key,0,-5);
-                    $sqlSelect .= ', COUNT('.strtolower($tmpKey).'.'.$tmpKey.'Id) as '
-                    	.$tmpKey.'Count';
-                    $sqlFrom .= ' LEFT JOIN '.strtolower($tmpKey)
-                    	.' ON '.strtolower($tmpKey).'.'.$this->getIdKey().'='
-                    	.$this->gTable().'.'.$this->getIdKey();
-                    $groupBy = true;
-                } else if (preg_match('/^OBJ/',$type)) {
+                    			$tmpKey = substr($key,0,-5);
+                    			$sqlSelect .= ', COUNT('.strtolower($tmpKey).'.'.$tmpKey.'Id) as ' .$tmpKey.'Count';
+                    			$sqlFrom .= ' LEFT JOIN '.strtolower($tmpKey) .' ON '.strtolower($tmpKey).'.'.$this->getIdKey().'=' .$this->gTable().'.'.$this->getIdKey();
+                    			$groupBy = true;
+                		} else if (preg_match('/^OBJ/',$type)) {
 					$pObj = $key;
 					if (strlen($type) > 3) {
 						$pObj = substr($type,4);
 					}
-                	$tmpObj = new $pObj();
-                    $tmpKey = $tmpObj->getIdKey();
-                    /* $sqlFrom .= ' LEFT JOIN '.$tmpObj->_table.' as '.$key
-						.' ON '.$tmpObj->_table.'.'.$tmpKey.'='
-						.$this->_table.'.'.$key.'Id'; */
-					$sqlFrom .= ' LEFT JOIN '.$tmpObj->gTable().' as '.$key
-						.' ON '.$key.'.'.$tmpKey.'='
-						.$this->gTable().'.'.$key.'Id';
-                    forEach($tmpObj->_properties as $keyNested => $typeNested) 
-                    {
-                        if ((preg_match('/^UID/',$typeNested))
-							|| (preg_match('/(Count|Last)$/',$keyNested)))
-						{
-                            continue;
-                        } else if ($typeNested == 'OBJ') {
-                        	$tmpNestedObj = new $keyNested();
-                        	$tmpNestedKey = $tmpNestedObj->getIdKey();
-                        	/* $sqlSelect .= ", ".$tmpObj->_table.".".$tmpNestedKey
-                        		." as ".$key."_".$tmpNestedKey; */
-							$sqlSelect .= ", ".$key.".".$tmpNestedKey
-                        		." as ".$key."_".$tmpNestedKey;
-                        } else {
-							/* $sqlSelect .= ", ".$tmpObj->_table."."
-								.$keyNested." as ".$key.'_'.$keyNested; */
-							$sqlSelect .= ", ".$key."."
-								.$keyNested." as ".$key.'_'.$keyNested;
-                        }
-                    }
-                    $groupBy = true;
-                }
-            }
+                			$tmpObj = new $pObj();
+                    			$tmpKey = $tmpObj->getIdKey();
+                    			/* $sqlFrom .= ' LEFT JOIN '.$tmpObj->_table.' as '.$key .' ON '.$tmpObj->_table.'.'.$tmpKey.'=' .$this->_table.'.'.$key.'Id'; */
+					$sqlFrom .= ' LEFT JOIN '.$tmpObj->gTable().' as '.$key .' ON '.$key.'.'.$tmpKey.'=' .$this->gTable().'.'.$key.'Id';
+                    			forEach($tmpObj->_properties as $keyNested => $typeNested) {
+                        			if ((preg_match('/^UID/',$typeNested)) || (preg_match('/(Count|Last)$/',$keyNested))) {
+                            				continue;
+                        			} else if ($typeNested == 'OBJ') {
+                        				$tmpNestedObj = new $keyNested();
+                        				$tmpNestedKey = $tmpNestedObj->getIdKey();
+                        				/* $sqlSelect .= ", ".$tmpObj->_table.".".$tmpNestedKey ." as ".$key."_".$tmpNestedKey; */
+							$sqlSelect .= ", ".$key.".".$tmpNestedKey ." as ".$key."_".$tmpNestedKey;
+                        			} else {
+							/* $sqlSelect .= ", ".$tmpObj->_table."." .$keyNested." as ".$key.'_'.$keyNested; */
+							$sqlSelect .= ", ".$key."." .$keyNested." as ".$key.'_'.$keyNested;
+                        			}
+                    			}
+                    			$groupBy = true;
+                		}
+            		}
 			unset($classModel);
 			if ($groupBy && array_key_exists('id',$this->_properties)) {
 				$this->addGroup($this->gTable().".".$this->getIdKey());
 			}
 
 			$sqlSelect = $sqlSelect.$sqlFrom;
-            	
-        } else if (!$sql2) {
-            	$sqlSelect = $sql1;
+        	} else if (!$sql2) {
+            		$sqlSelect = $sql1;
 		} else {
 			$sqlCount = $sql1;
 			$sqlSelect = $sql2;
@@ -828,16 +792,16 @@ class TznDb extends Tzn {
 					return false;
 				}
 			} else if ($sql1 != TZN_DB_COUNT_OFF) {
-                if ($sql1 == TZN_DB_COUNT_AUTO) {
-                    $tempData = $this->query($sqlSelect);
-                    $this->_total = $tempData->_count;
-                    unset($tempData);
-                } else {
-                    $sqlCount .= $this->sqlWhere();
-                    if (!$this->loadCount($sqlCount)) {
-                        return false;
-                    }
-                }
+                		if ($sql1 == TZN_DB_COUNT_AUTO) {
+                    			$tempData = $this->query($sqlSelect);
+                    			$this->_total = $tempData->_count;
+                    			unset($tempData);
+                		} else {
+                    			$sqlCount .= $this->sqlWhere();
+                    			if (!$this->loadCount($sqlCount)) {
+                        			return false;
+                    			}
+                		}
 			}
 			$sqlSelect .= $this->sqlLimit();
 		}
@@ -851,30 +815,28 @@ class TznDb extends Tzn {
 		}
 		
 		return $return;
-
-    }
+	}
     
-    /* -- Retreiving -------------------------------------------- */
-    
-    function rMore() {
-    	if ($this->_data) {
-	    	return $this->_data->rMore();
-	    }
-	    return false;
-    }
-    
-    function rCount() {
-    	if ($this->_data) {
-    		return $this->_data->rCount();
+    	/* -- Retreiving -------------------------------------------- */
+    	function rMore() {
+    		if ($this->_data) {
+	    		return $this->_data->rMore();
+	    	}
+	    	return false;
     	}
-    	return false;
-    }
     
-    function rTotal() {
-    	return $this->_total;
-    }
+    	function rCount() {
+    		if ($this->_data) {
+    			return $this->_data->rCount();
+    		}
+    		return false;
+    	}
     
-    function rNext() {
+    	function rTotal() {
+    		return $this->_total;
+    	}
+    
+    	function rNext() {
 		if ($this->rMore()) {
 			return $this->_setItem($this->_data->rNext());
 		} else {
@@ -921,7 +883,6 @@ class TznDb extends Tzn {
 	}
     
     	/* -- Item functions ---------------------------------------- */
-
     	function add($ignore=false) {
     		// create SQL statement
 		$strSql = 'INSERT '.(($ignore)?'IGNORE ':'') .'INTO '.$this->gTable().' SET ';
@@ -960,13 +921,13 @@ class TznDb extends Tzn {
 		} 
     	}
 
-    function update($fields=null,$filter=null) {
-    	// echo "<pre>--- UPDATE ---\r\n"; $this->dump(); echo "---\r\n";
-        $strSql = "UPDATE ".$this->gTable()." SET ";
-        if ($fields) {
-        	$arrFields = explode(',',$fields);
-        	$first = true;
-        	forEach($arrFields as $field) {
+    	function update($fields=null,$filter=null) {
+    		// echo "<pre>--- UPDATE ---\r\n"; $this->dump(); echo "---\r\n";
+        	$strSql = "UPDATE ".$this->gTable()." SET ";
+        	if ($fields) {
+        		$arrFields = explode(',',$fields);
+        		$first = true;
+        		forEach($arrFields as $field) {
 				$field=trim($field);
 				if ($first) {
 					$first = false;
@@ -983,48 +944,48 @@ class TznDb extends Tzn {
 			$strSql .= $this->zPropsToSql();
 		}
 		if ($filter) {
-        	$strSql .= ' WHERE '.$filter;
-        } else if ($this->id) {
+        		$strSql .= ' WHERE '.$filter;
+        	} else if ($this->id) {
 			$strSql .= " WHERE ".$this->getIdKey()."='".$this->id."'";
 		} else {
 			// update everything?!?
 			$strSql .= " WHERE 1";
 		}
 		//echo $strSql; exit; // ."\r\n</pre>";
-        return $this->query($strSql);
-    }
+        	return $this->query($strSql);
+    	}
 
-    function delete($filter = null) {
-    	// remove from Database
+    	function delete($filter = null) {
+    		// remove from Database
 		$strSql = "DELETE FROM ".$this->gTable()." WHERE ";
 		if (!empty($filter)) {
 			$strSql .= $filter;
 		} else if ($this->id) {
-	        $strSql .= $this->getIdKey()."='".$this->id."'";
+	        	$strSql .= $this->getIdKey()."='".$this->id."'";
 		} else {
 			return false;
 		}
-        $this->getConnection();
-        return $this->query($strSql);
-    }
+        	$this->getConnection();
+        	return $this->query($strSql);
+    	}
 
 	function emptyTable() {
 		$this->getConnection();
 		return $this->query('TRUNCATE '.$this->gTable());
 	}
 
-    function checkUnique($key, $value, $field=null) {
+    	function checkUnique($key, $value, $field=null) {
 		if ($value == "") {
 			return false;
 		}
-        $idKey = $this->getIdKey();
-        $strSql  = "SELECT ".$idKey;
+        	$idKey = $this->getIdKey();
+        	$strSql  = "SELECT ".$idKey;
 		if ($key != 'id') {
 			$strSql .= ', '.$key;
 		}
-        if ($field) {
-            $strSql .=", ".$field;
-        }
+        	if ($field) {
+            		$strSql .=", ".$field;
+        	}
 		$strSql .= " FROM " .$this->gTable();
 		if ($key == 'id') {
 			$strSql .= ' WHERE '.$idKey." = '".$value."'";
@@ -1034,17 +995,17 @@ class TznDb extends Tzn {
 				$strSql.=" AND ".$idKey." <> ".$this->id;
 			}
 		}
-        $this->getConnection();
-        if ($result = $this->query($strSql)) {
-            if ($row = $result->rNext()) {
-            	// $this->setAuto($row);
-                return $row->$idKey;
-            }
-        }
-        return false;
-    }
+        	$this->getConnection();
+        	if ($result = $this->query($strSql)) {
+            		if ($row = $result->rNext()) {
+            			// $this->setAuto($row);
+                		return $row->$idKey;
+            		}
+        	}
+        	return false;
+    	}
 
-    function concatSQL($begin, $end, $separator = 'AND', $instruction = '') {
+    	function concatSQL($begin, $end, $separator = 'AND', $instruction = '') {
 		$separator = ' '.trim($separator).' ';
 		if (!empty($instruction)) {
 			$instruction .= ' ';
@@ -1062,58 +1023,58 @@ class TznDb extends Tzn {
 		}
 	}
 
-    /* function setSqlProperties($objData, $nested = false) {
-        $this->_setObjectProperties("setSql",$objData);
-    } */
+    	/* function setSqlProperties($objData, $nested = false) {
+        	$this->_setObjectProperties("setSql",$objData);
+    	} */
 
-    function zPropsToSql() {
-        // to create SQL statement (insert or update)
-        // checks if word is reserved or add ''
-        $strSql = "";
-        $first = true;
+    	function zPropsToSql() {
+        	// to create SQL statement (insert or update)
+        	// checks if word is reserved or add ''
+        	$strSql = "";
+        	$first = true;
 
-        foreach ($this->_properties as $key => $type) {
-            if ($key == "id" || preg_match("/(Count|Last)$/",$key)) {
-                continue;
-            } 
-            $value = $this->$key;
-            if ($type == 'OBJ' || is_object($value)) {
-            	if (is_a($value, 'TznFile')) {	
-            		$value->save();
-            		$oKey = $key;
-            		$oValue = '\''.$value->folder.$value->fileName.'\'';
-            		// remove from session
-            		$tmpKey = $key.'_tmp';
-            		unset($_SESSION[$tmpKey]);
-            	} else {
+        	foreach ($this->_properties as $key => $type) {
+            		if ($key == "id" || preg_match("/(Count|Last)$/",$key)) {
+                		continue;
+            		} 
+            		$value = $this->$key;
+            		if ($type == 'OBJ' || is_object($value)) {
+            			if (is_a($value, 'TznFile')) {	
+            				$value->save();
+            				$oKey = $key;
+            				$oValue = '\''.$value->folder.$value->fileName.'\'';
+            				// remove from session
+            				$tmpKey = $key.'_tmp';
+            				unset($_SESSION[$tmpKey]);
+            			} else {
 					// $oKey = $value->getIdKey();
 					$oKey = $key.'Id';
 					$oValue = '\''.$value->id.'\'';
 				}
-            } else {
-                $oKey = $key;
-                $oValue = $this->zValueToSql($value,$type);
-            }
+            		} else {
+                		$oKey = $key;
+                		$oValue = $this->zValueToSql($value,$type);
+            		}
 
-            if ($first) {
-                $first = false;
-            } else {
-                $strSql.=", ";
-            }
+            		if ($first) {
+                		$first = false;
+            		} else {
+                		$strSql.=", ";
+            		}
 			$strSql .= '`'.$oKey.'`='.$oValue;
-        }
+        	}
 
-        return $strSql;
-    }
+       	 	return $strSql;
+    	}
     
-    function zValueToSql($value,$type=null) {
-    	 if (($type == 'INT') || ($type == 'NUM') || ($type == 'DEC') || ($type == 'BOL')) {
-             $str = ($value)?$value:0;
-    	 } else if ($type == 'DTE') {
-    	 	$str = '\''.(($value)?$value:'0000-00-00').'\'';
-    	 } else if ($type == 'DTM') {
-    	 	$str = '\''.(($value)?$value:'0000-00-00 00:00:00').'\'';
-         } else if (is_object($value)) {
+    	function zValueToSql($value,$type=null) {
+    	 	if (($type == 'INT') || ($type == 'NUM') || ($type == 'DEC') || ($type == 'BOL')) {
+             		$str = ($value)?$value:0;
+    	 	} else if ($type == 'DTE') {
+    	 		$str = '\''.(($value)?$value:'0000-00-00').'\'';
+    	 	} else if ($type == 'DTM') {
+    	 		$str = '\''.(($value)?$value:'0000-00-00 00:00:00').'\'';
+         	} else if (is_object($value)) {
 			if (is_a($value, 'TznFile')) {
 				$value->save();
 				$str = '\''.$value->folder.$value->filename.'\'';
@@ -1121,27 +1082,21 @@ class TznDb extends Tzn {
 				$str = '\''.$value->id.'\'';
 			}
 		} else if (preg_match("/^(ENCODE|ENCRYPT|MD5|NOW)\(.*\)/", $value)) {
-            $str = $value;
-        } else {
-            $str = "'".addslashes($value)."'";
-            /*
-            if ($this->_dbConnection->_dbLink) {
-            	$str = '\''.mysqli_real_escape_string($this->_dbConnection->_dbLink,$value).'\'';
-            } else {
-            	$str = "'".addslashes($value)."'";
-            }
-            */
-        }
-        // error_log('type='.$type.', value='.$str);
-        return $str;
-    }
+            		$str = $value;
+        	} else {
+            		$str = "'".addslashes($value)."'";
+            		/* if ($this->_dbConnection->_dbLink) {
+            			$str = '\''.mysqli_real_escape_string($this->_dbConnection->_dbLink,$value).'\'';
+            		} else {
+            			$str = "'".addslashes($value)."'";
+            		} */
+        	}
+        	// error_log('type='.$type.', value='.$str);
+        	return $str;
+    	}
     
-    /* ----- List Order ------ */
-    
-    function pSort($link, $param, $field, $style='',
-    	$imgAsc = TZN_DB_ASC_OFF, $imgAscActive = TZN_DB_ASC_ON, 
-    	$imgDesc = TZN_DB_DESC_OFF, $imgDescActive = TZN_DB_DESC_ON) 
-    {
+    	/* ----- List Order ------ */
+    	function pSort($link, $param, $field, $style='', $imgAsc = TZN_DB_ASC_OFF, $imgAscActive = TZN_DB_ASC_ON, $imgDesc = TZN_DB_DESC_OFF, $imgDescActive = TZN_DB_DESC_ON) {
 		$begin = '<a href="'.$link;
 		if (preg_match('/\?/',$link)) {
 			$begin .= '&';
@@ -1153,23 +1108,19 @@ class TznDb extends Tzn {
 		$end .= Tzn::_style($style);
 		$end .= '>';
 		if (preg_match('/^'.$field.' ASC/',$this->_sqlOrder)) {
-            print '<img src="'.$imgAscActive.'">';
+            		print '<img src="'.$imgAscActive.'">';
 		} else {
-            print $begin.$field.'+ASC'.$end.'<img src="'.$imgAsc
-            	.'" border="0"></a>';
+            		print $begin.$field.'+ASC'.$end.'<img src="'.$imgAsc .'" border="0"></a>';
 		}
-        if (preg_match('/^'.$field.' DESC/',$this->_sqlOrder)) {
+        	if (preg_match('/^'.$field.' DESC/',$this->_sqlOrder)) {
 			print '<img src="'.$imgDescActive.'">';
 		} else {
-			print $begin.$field.'+DESC'.$end.'<img src="'.$imgDesc
-				.'" border="0"></a>';
+			print $begin.$field.'+DESC'.$end.'<img src="'.$imgDesc .'" border="0"></a>';
 		}
 	}
 
 	/* ----- Pagination ------ */
-	
-	function pPagination($link, $param, $style = TZN_DB_PAGING_OFF,
-		$styleCurrent = TZN_DB_PAGING_ON) {
+	function pPagination($link, $param, $style = TZN_DB_PAGING_OFF, $styleCurrent = TZN_DB_PAGING_ON) {
 		// link = page filename + original parameters
 		// param = name of variable parameter for paging
 		// current = current page (integer)
@@ -1207,8 +1158,7 @@ class TznDb extends Tzn {
 						if ($styleCurrent == '<b>') {
 							print '<b>'.$i.'</b>';
 						} else {
-							print '<span class="'.$styleCurrent.'">'
-								.$i.'</span>';
+							print '<span class="'.$styleCurrent.'">' .$i.'</span>';
 						}
 					} else {
 						echo($i);
@@ -1220,7 +1170,7 @@ class TznDb extends Tzn {
 		}
 	}
 
-    function pPageSelect($link, $param, $style = null, $styleCurrent = null) {
+    	function pPageSelect($link, $param, $style = null, $styleCurrent = null) {
 		if (!$this->_pageSize) return false;
 		$max = 0;
 		while (($max * $this->_pageSize) < $this->_total) {
@@ -1230,24 +1180,23 @@ class TznDb extends Tzn {
 			return false;
 		} 
 		if (preg_match('/\?/',$link)) {
-		  $link .= '&';
+		  	$link .= '&';
 		} else {
-		  $link .= '?';
+		  	$link .= '?';
 		}
 		print '<select name="_'.$param.'"';
 		print Tzn::_style($style);
-		print ' onChange="location.href=\''.$link.$param
-		.'=\'+this.options[this.selectedIndex].value">';
+		print ' onChange="location.href=\''.$link.$param .'=\'+this.options[this.selectedIndex].value">';
 		for($i=1; $i<=$max; $i++) {
-		  print '<option value="'.$i.'"';
-		  if ($this->_page == $i) {
-			  print ' selected="true"';
-			  print Tzn::_style($styleCurrent);
-		  }
-		  print '>page '.$i.'</option>';
+		  	print '<option value="'.$i.'"';
+		  	if ($this->_page == $i) {
+			  	print ' selected="true"';
+			  	print Tzn::_style($styleCurrent);
+		  	}
+		  	print '>page '.$i.'</option>';
 		}
 		print '</select>';
-    }
+    	}
 
 	function hasPrevious() {
 		if (empty($this->_page) || ($this->_page <= 1)) {
@@ -1257,9 +1206,7 @@ class TznDb extends Tzn {
 		}
 	}
 
-	function pPrevious($link, $param, $text = "&lt;", 
-		$styleOn = TZN_DB_PAGING_ENABLED, $styleOff = TZN_DB_PAGING_DISABLED)
-	{
+	function pPrevious($link, $param, $text = "&lt;", $styleOn = TZN_DB_PAGING_ENABLED, $styleOff = TZN_DB_PAGING_DISABLED) {
 		// link = page filename + original parameters
 		// param = name of variable parameter for paging
 		// current = current page (integer)
@@ -1290,6 +1237,7 @@ class TznDb extends Tzn {
 
 	function hasNext() {
 		if (!$this->_pageSize) return false;
+
 		if (empty($this->_page)) {
 			$this->_page = 1;
 		}
@@ -1300,9 +1248,7 @@ class TznDb extends Tzn {
 		}
 	}
 
-	function pNext($link, $param, $text = "&gt;", 
-		$styleOn = TZN_DB_PAGING_ENABLED, $styleOff = TZN_DB_PAGING_DISABLED) 
-	{
+	function pNext($link, $param, $text = "&gt;", $styleOn = TZN_DB_PAGING_ENABLED, $styleOff = TZN_DB_PAGING_DISABLED) {
 		// link = page filename + original parameters
 		// param = name of variable parameter for paging
 		// current = current page (integer)
@@ -1330,5 +1276,4 @@ class TznDb extends Tzn {
 			return true;
 		}
 	}
-
 }
