@@ -118,7 +118,7 @@ if ($pUserCanManage) {
 	// --- update position ---
 	
 	foreach ($_REQUEST as $key => $value) {
-		if (ereg('^position-',$key)) {
+		if (preg_match('/^position-/',$key)) {
 			$id = intval(substr($key,9));
 			if ($id != $objUser->id || $pUserIsAdmin) {
 				// can not change own position

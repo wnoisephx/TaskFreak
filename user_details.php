@@ -64,7 +64,7 @@ if ($pUserIsAdmin) {
 	// ----- update position ----
 	
 	foreach ($_REQUEST as $key => $value) {
-		if (ereg('^position-',$key)) {
+		if (preg_match('/^position-/',$key)) {
 			$id = intval(substr($key,9));
 			$objMemberTeam = new MemberProject();
 			if ($objMemberTeam->loadPosition($id,$objItem->id))

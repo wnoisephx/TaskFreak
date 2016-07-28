@@ -104,7 +104,7 @@ class TznFile extends Tzn {
     }
 
 	function isImage() {
-		return ereg("jpg|jpeg|png|gif",$this->fileType);
+		return preg_match("/jpg|jpeg|png|gif/",$this->fileType);
 	}
 
 	function pIcon($option="") {

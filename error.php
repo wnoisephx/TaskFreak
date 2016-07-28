@@ -88,7 +88,7 @@ p.error {
   ?>
     <p><a href="<?php echo $_SERVER['HTTP_REFERER']; ?>">click here to go back and try again</a></p>
   <?php
-    } else if (!ereg('error\.php$',$_SERVER['PHP_SELF'])) {
+    } else if (!preg_match('/error\.php$/',$_SERVER['PHP_SELF'])) {
   ?>
     <p><a href="javascript:window.location.reload(true)">click here to try again</a></p>
   <?php
