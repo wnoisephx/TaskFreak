@@ -952,7 +952,7 @@ class TznDb extends Tzn {
 		$this->getConnection();
 		if ($this->query($strSql)) {
 			if (!$this->id) {
-				$this->id = mysqli_insert_id($dbConnection->getdbLink();
+				$this->id = mysqli_insert_id($dbConnection->getdbLink());
 			}
 			return $this->id;
 		} else {
