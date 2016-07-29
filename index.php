@@ -75,7 +75,7 @@ if ($pUser) {
     $pDefaultUserId = $pUser;
 } else {
     unset($_SESSION['selUser']);
-    session_unregister('selUser');
+//    session_unregister('selUser');
     $pDefaultUserId = $objUser->id;
     // by default, show own tasks
     /*
