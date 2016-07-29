@@ -107,12 +107,12 @@ class TznDbConnection {
 				}
                 	return false;
 			}
-			if (!@mysql_select_db($this->_dbBase,$this->_dbLink)) {
+			if (!@mysqli_select_db($this->_dbLink,$this->_dbBase)) {
                 		if (!$this->_critical) {
-                    			$this->_error['db'] = @mysql_error($this->_dbLink);
+                    			$this->_error['db'] = @mysqli_error($this->_dbLink);
                 		} else if (defined("TZN_DB_ERROR_PAGE") && (constant("TZN_DB_ERROR_PAGE"))) {
                     			$_REQUEST['tznMessage'] = 'Can not select database<br />'
-                        		.@mysql_error($this->_dbLink);
+                        		.@mysqli_error($this->_dbLink);
                     			include TZN_DB_ERROR_PAGE;
                     			exit;
 				} else {
