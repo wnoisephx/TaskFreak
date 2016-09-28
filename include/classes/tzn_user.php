@@ -217,16 +217,16 @@ EOS;
 		$this->update("username, password, salt, lastChangeDate");
 	}
 
-	function add() {
-		$this->setDtm('creationDate','NOW');
-		return parent::add();
-	}
+    function add($ignore = false) {
+	$this->setDtm('creationDate','NOW');
+	return parent::add();
+    }
 	
-	function updateLevel() {
+    function updateLevel() {
         return $this->update("level,lastChangeDate");
-	}
+    }
 
-    function update($fields=null) {
+    function update($fields=null, $filter = NULL) {
         $this->setDtm('lastChangeDate','NOW');
         if ($fields && (!preg_match('/lastChangeDate/',$fields))) {
         	$fields .= ",lastChangeDate";
