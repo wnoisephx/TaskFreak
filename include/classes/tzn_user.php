@@ -217,7 +217,7 @@ EOS;
 		$this->update("username, password, salt, lastChangeDate");
 	}
 
-    function add($ignore = false) {
+    function add($status = NULL, $userid = NULL, $ignore = false) {
 	$this->setDtm('creationDate','NOW');
 	return parent::add();
     }

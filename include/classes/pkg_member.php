@@ -92,40 +92,40 @@ class Project extends TznDb
 		$objStatus->projectId = $this->id;
 		$objStatus->setDtm('statusDate','NOW');
 		$objStatus->statusKey = $status;
-        $objStatus->member->id = $userId;
+        	$objStatus->member->id = $userId;
 		return $objStatus->add();
 	}
 
-    function pPosition($default='-') {
+    	function pPosition($default='-') {
 		$str = $this->memberProject->getPosition();
-        print ($str)?$str:$default;
+        	print ($str)?$str:$default;
 	}
 	
 	function check() {
 		return $this->checkEmpty('name');
 	}
 	
-	function add($status,$userId) {
-		if (parent::add()) {
-            // add poroject initial status
+	function add($status=null,$userId=null,$ignore=null) {
+		if (parent::add(false)) {
+            		// add poroject initial status
 			if ($this->setStatus($status,$userId)) {
-                // add user as project leader
-                $objLeader = new MemberProject();
-                $objLeader->initObjectProperties();
-                $objLeader->project->id = $this->id;
-                $objLeader->member->id = $userId;
-                $objLeader->position = FRK_PROJECT_LEADER; // leader
-                return $objLeader->add();
-            } else {
-                // -TODO- rollback
-                return false;
-            }
+                		// add user as project leader
+                		$objLeader = new MemberProject();
+                		$objLeader->initObjectProperties();
+                		$objLeader->project->id = $this->id;
+                		$objLeader->member->id = $userId;
+                		$objLeader->position = FRK_PROJECT_LEADER; // leader
+                		return $objLeader->add();
+            		} else {
+                		// -TODO- rollback
+                		return false;
+            		}
 		} else {
 			return false;
 		}
 	}
 	
-	function delete() {
+	function delete($filter=NULL) {
 		if ($this->id) {
 			$this->getConnection();
 			if (@constant('FRK_MYSQL_VERSION_GT_4_1')) {
@@ -202,17 +202,17 @@ class ProjectStats extends Project
         unset($this->memberProject);
     }
 
-    function add($status,$userId) {
+    function add($statusi = NULL, $userId = NULL, $ignore = NULL) {
         $this->_cleanProperties();
         return parent::add($status,$userId);
     }
 	
-    function update($param='') {
+    function update($param='', $filter = NULL) {
         $this->_cleanProperties();
         parent::update($param);
     }
 
-    function load($userId, $strict=true) {
+    function load($userId=null, $strict=true) {
         if (!$this->id) {
             return false;
         }
@@ -245,7 +245,7 @@ class ProjectStats extends Project
         return $this->loadByQuery($sqlSelect);
     }
 	
-	function loadList($userId, $strict=true) {
+	function loadList($userId=null, $strict=true) {
         $sqlCommon = 'FROM '.$this->gTable().' AS pp '
             .'INNER JOIN '.$this->gTable('projectStatus').' AS ps ON ps.projectId = pp.projectId '
             .(($strict)?'INNER':'LEFT').' JOIN '.$this->gTable('memberProject')
@@ -286,7 +286,7 @@ class ProjectStatsFull extends ProjectStats
 		print $this->projectStatus->getStatus();
 	}
 	
-	function loadList($userId, $strict=true) {
+	function loadList($userId=null, $strict=true) {
         $sqlCommon = 'FROM '.$this->gTable().' AS pp '
             .'INNER JOIN '.$this->gTable('projectStatus').' AS ps ON ps.projectId = pp.projectId '
             .(($strict)?'INNER':'LEFT').' JOIN '.$this->gTable('memberProject')
@@ -358,22 +358,22 @@ class MemberProject extends TznDb
 		echo $this->getPosition();
 	}
 
-    function checkRights($level) {
-        $level--;
-        return ($GLOBALS['confProjectRights'][$this->position]{$level} == '1');
-    }
+    	function checkRights($level) {
+        	$level--;
+        	return ($GLOBALS['confProjectRights'][$this->position]{$level} == '1');
+    	}
 
-    function loadPosition($projectId,$memberId) {
-        $table = $this->gTable('memberProject');
-        return $this->loadByFilter($table.'.projectId='.$projectId
+    	function loadPosition($projectId,$memberId) {
+        	$table = $this->gTable('memberProject');
+        	return $this->loadByFilter($table.'.projectId='.$projectId
 			.' AND '.$table.'.memberId='.$memberId);
-    }
+    	}
 	
-	function add() {
+	function add($status = NULL, $userid = NULL, $ignore = false) {
 		if (!$this->project->id || !$this->member->id) {
 			return false;
 		}
-		$this->getConnection();
+		$thio->getConnection();
 		if ($this->loadByFilter($this->gTable('memberProject').'.projectId='.$this->project->id
 			.' AND '.$this->gTable('memberProject').'.memberId='.$this->member->id)) 
 		{
@@ -384,12 +384,12 @@ class MemberProject extends TznDb
 		}
 	}
 	
-	function update($fields=null) {
+	function update($fields=null, $filter = NULL) {
 		parent::update($fields,'projectId='.$this->project->id
 			.' AND memberId='.$this->member->id);
 	}
 	
-	function delete() {
+	function delete($filter = NULL) {
 		if ($this->project->id && $this->member->id) {
 			$this->getConnection();
 			return $this->query('DELETE FROM '.$this->gTable()
@@ -510,7 +510,7 @@ class Member extends TznUser
 		}
 	}
 
-    function delete() {
+    function delete($filter = NULL) {
         if ($this->id) {
 			// 1. delete member
 			if (parent::delete()) {

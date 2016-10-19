@@ -70,7 +70,7 @@ class TznDbConnection {
 	var $_dbPass;
 	var $_dbBase;
 	var $_dbLink;
-    var $_critical;
+    	var $_critical;
 
 	function TznDbConnection($host=null, $user=null, $pass=null, $base=null) {
         if ($host && $user && $base) {
@@ -581,7 +581,7 @@ class TznDb extends Tzn {
 	}
     
     	/* -- Queries -------------------------------------------------------- */
-    	function load() {
+    	function load($userId = null, $strict = null) {
         	// load by Id
 		if ($this->id) {
 	        	return $this->loadByKey($this->getIdKey(), $this->id);
@@ -883,7 +883,7 @@ class TznDb extends Tzn {
 	}
     
     	/* -- Item functions ---------------------------------------- */
-    	function add($ignore=false) {
+    	function add($status=null, $userid=null, $ignore=false) {
     		// create SQL statement
 		$strSql = 'INSERT '.(($ignore)?'IGNORE ':'') .'INTO '.$this->gTable().' SET ';
 		if ($this->id) {

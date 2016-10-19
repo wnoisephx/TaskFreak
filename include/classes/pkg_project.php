@@ -46,7 +46,7 @@ class ItemStatus extends TznDb
 	}
 	
 
-    function add() {
+    function add($status = NULL, $userid = NULL, $ignore = false) {
         if (!$this->statusDate) {
             $this->setDtm('statusDate','NOW');
         }
@@ -149,7 +149,7 @@ class Item extends TznDb
 		}
 	}
 
-	function loadList($sql='') {
+	function loadList($sql='', $sql2 = NULL) {
 		if ($sql) {
 			return parent::loadList(TZN_DB_COUNT_OFF,$sql);
 		} else {
@@ -183,7 +183,7 @@ class Item extends TznDb
 		}
 	}
 
-	function delete() {
+	function delete($filter = NULL) {
 		if (parent::delete()) {
 			$this->query('DELETE FROM '.$this->gTable('itemStatus').' WHERE itemId='.$this->id);
 			$this->query('DELETE FROM '.$this->gTable('itemComment').' WHERE itemId='.$this->id);
@@ -315,17 +315,17 @@ class ItemStats extends Item
         unset($this->position);
     }
 
-    function add() {
+    function add($status = NULL, $userid = NULL, $ignore = false) {
         $this->_cleanProperties();
         parent::add();
     }
 	
-    function update($param='') {
+    function update($param='', $filter = NULL) {
         $this->_cleanProperties();
         parent::update($param);
     }
 
-	function load($userId) {
+	function load($userId = null, $strict = true) {
 		if (!$this->id) {
 			return false;
 		}
@@ -380,7 +380,7 @@ class ItemStats extends Item
 		}
 	}
 	
-	function loadList($userId=0) {
+	function loadList($userId=0, $sql2 = NULL) {
 		$sql = 'SELECT ii.*, ';
         if (@constant('FRK_MYSQL_VERSION_GT_4_1')) {
 			$sql .= 'count(iic.postDate) as itemCommentCount, '
@@ -470,12 +470,12 @@ class ItemComment extends TznDb
 		}
     }
 	
-	function add() {
+	function add($status = NULL, $userid = NULL, $ignore = false) {
 		$this->setDtm('postDate','NOW');
 		return parent::add();
 	}
 	
-	function update() {
+	function update($fields = NULL, $filter = NULL) {
 		$this->setDtm('lastChangeDate','NOW');
 		return parent::update();
 	}
@@ -505,7 +505,7 @@ class ItemCommentFull extends ItemComment
 		));
 	}
 	
-	function loadList() {
+	function loadList($sql1 = NULL, $sql2 = NULL) {
 		$sql = 'SELECT iic.*, mm.username as member_username, mm.timeZone as member_timeZone,'
 			.'mm.creationDate as member_creationDate, mm.firstName as member_firstName, '
 			.'mm.middleName as member_middleName, mm.lastName as member_lastName, '
