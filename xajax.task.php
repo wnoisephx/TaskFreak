@@ -609,7 +609,11 @@ function task_update_comment($taskId,$commId,$body) {
 			$objComment = new ItemComment();
 			$objComment->set('body',$body);
 			$objComment->itemId = $objTask->id;
-			$objComment->member->id = $objUser->id;
+			// problem seems to be that objComment->member->id does not exist
+			// objComment->id does
+			// see "pkg_project.php" line 438
+			// $objComment->member->id = $objUser->id;
+			$objComment->id = $objUser->id;
 			if ($objComment->add()) {
 				$str = $GLOBALS['langMessage']['done_comment_added'];
 			}

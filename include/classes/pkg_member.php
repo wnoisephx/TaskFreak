@@ -373,7 +373,7 @@ class MemberProject extends TznDb
 		if (!$this->project->id || !$this->member->id) {
 			return false;
 		}
-		$thio->getConnection();
+		$this->getConnection();
 		if ($this->loadByFilter($this->gTable('memberProject').'.projectId='.$this->project->id
 			.' AND '.$this->gTable('memberProject').'.memberId='.$this->member->id)) 
 		{

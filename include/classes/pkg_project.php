@@ -87,7 +87,8 @@ class Item extends TznDb
     function setStatus($status,$userId) {
         $objItemStatus = new ItemStatus();
         $objItemStatus->itemId = $this->id;
-        $objItemStatus->member->id = $userId;
+//        $objItemStatus->member->id = $userId;
+        $objItemStatus->id = $userId;
         $objItemStatus->statusKey = $status;
         $objItemStatus->add();
     }
@@ -292,7 +293,8 @@ class ItemStats extends Item
     	if (!$this->position) {
     		$this->position = 0;
     	}
-        if ($userCanToo && $userId == $this->member->id) {
+//        if ($userCanToo && $userId == $this->member->id) {
+        if ($userCanToo && $userId == $this->id) {
             return true;
         } else if ($userId == $this->authorId) {
             return true;
@@ -444,7 +446,7 @@ class ItemComment extends TznDb
 			'member'			=> 'OBJ',
 			'postDate'			=> 'DTM',
 			'body'				=> 'BBS',
-			'lastChangeDate'	=> 'DTM'
+			'lastChangeDate'		=> 'DTM'
 		));
 	}
 	
@@ -458,9 +460,11 @@ class ItemComment extends TznDb
 
 	function checkRights($userId, $level=0, $objTask, $userCanToo=false) {
 		//error_log('checkin #'.$this->id.'/'.$level.' : '.$userId.' = '.$this->member->id);
-		if ($userId == $objTask->member->id && $userCanToo) {
+//		if ($userId == $objTask->member->id && $userCanToo) {
+		if ($userId == $objTask->id && $userCanToo) {
 			return true;
-		} else if ($userId == $this->member->id) {
+//		} else if ($userId == $this->member->id) {
+		} else if ($userId == $this->id) {
             return true;
         } else if ($level) {
             $level--;
