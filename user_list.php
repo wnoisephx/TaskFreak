@@ -84,11 +84,11 @@ if ($sName = $_REQUEST['keyword']) {
 		."OR  username LIKE '$hParam')");
 }
 
-if ($sCountry = Tzn::getReg($_REQUEST['country'],'^[A-Z]+$')) {
+if ($sCountry = Tzn::getReg($_REQUEST['country'],'/^[A-Z]+$/')) {
 	$objItemList->addWhere("member.countryId='".$sCountry."'");
 }
 
-if ($sState = Tzn::getReg($_REQUEST['state'],'^[A-Z]+$')) {
+if ($sState = Tzn::getReg($_REQUEST['state'],'/^[A-Z]+$/')) {
 	$objItemList->addWhere("member.stateCode='".$sState."'");
 }
 

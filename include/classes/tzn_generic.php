@@ -720,11 +720,11 @@ class Tzn {
 		}
 	}
     
-    function setUid($value) {
-    	if (preg_match('/^[0-9a-zA-Z]*$/',$value)) {
-	    	$this->id = $value;
-	    }
-    }
+    	function setUid($value) {
+    		if (preg_match('/^[0-9a-zA-Z]*$/',$value)) {
+	    		$this->id = $value;
+	    	}
+    	}
 	
 	function getReg($value,$regexp) {
 		if (preg_match($regexp,$value)) {

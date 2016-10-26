@@ -75,8 +75,8 @@ define('PRJ_WWW_URL','http://'.$_SERVER['SERVER_NAME'].dirname($_SERVER['PHP_SEL
 
 // === TASKFREAK CUSTOMIZATION ================================
 
-define('FRK_VERSION','0.6.4');
-define('FRK_VERSION_RELEASE','2010-06-27');
+define('FRK_VERSION','0.7.0');
+define('FRK_VERSION_RELEASE','2016-10-26');
 
 define('FRK_MYSQL_VERSION_GT_4_1',FALSE);
 
