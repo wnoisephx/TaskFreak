@@ -92,7 +92,7 @@ class Project extends TznDb
 		$objStatus->projectId = $this->id;
 		$objStatus->setDtm('statusDate','NOW');
 		$objStatus->statusKey = $status;
-        	$objStatus->member->id = $userId;
+        	$objStatus->memberid = $userId;
 		return $objStatus->add();
 	}
 
@@ -112,8 +112,8 @@ class Project extends TznDb
                 		// add user as project leader
                 		$objLeader = new MemberProject();
                 		$objLeader->initObjectProperties();
-                		$objLeader->project->id = $this->id;
-                		$objLeader->member->id = $userId;
+                		$objLeader->projectid = $this->id;
+                		$objLeader->memberid = $userId;
                 		$objLeader->position = FRK_PROJECT_LEADER; // leader
                 		return $objLeader->add();
             		} else {
@@ -370,12 +370,12 @@ class MemberProject extends TznDb
     	}
 	
 	function add($status = NULL, $userid = NULL, $ignore = false) {
-		if (!$this->project->id || !$this->member->id) {
+		if (!$this->projectid || !$this->memberid) {
 			return false;
 		}
 		$this->getConnection();
-		if ($this->loadByFilter($this->gTable('memberProject').'.projectId='.$this->project->id
-			.' AND '.$this->gTable('memberProject').'.memberId='.$this->member->id)) 
+		if ($this->loadByFilter($this->gTable('memberProject').'.projectId='.$this->projectid
+			.' AND '.$this->gTable('memberProject').'.memberId='.$this->memberid)) 
 		{
 			// already in project
 			return false;
@@ -385,16 +385,16 @@ class MemberProject extends TznDb
 	}
 	
 	function update($fields=null, $filter = NULL) {
-		parent::update($fields,'projectId='.$this->project->id
-			.' AND memberId='.$this->member->id);
+		parent::update($fields,'projectId='.$this->projectid
+			.' AND memberId='.$this->memberid);
 	}
 	
 	function delete($filter = NULL) {
-		if ($this->project->id && $this->member->id) {
+		if ($this->projectid && $this->memberid) {
 			$this->getConnection();
 			return $this->query('DELETE FROM '.$this->gTable()
-				.' WHERE projectId='.$this->project->id
-				.' AND memberId='.$this->member->id);
+				.' WHERE projectId='.$this->projectid
+				.' AND memberId='.$this->memberid);
 		} else {
 			return false;
 		}

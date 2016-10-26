@@ -220,7 +220,7 @@ function task_load_edit($id) {
 		$objTask = new Item();
 		if ($_SESSION['linkItems']) {
 			preg_match('/sProject=([0-9]+)&/',$_SESSION['linkItems'],$matches);
-			$objTask->project->id = $matches[1];
+			$objTask->projectid = $matches[1];
 		}
 		ob_start();
 		include PRJ_INCLUDE_PATH.'html/xajax_panel_edit.php';
@@ -609,11 +609,7 @@ function task_update_comment($taskId,$commId,$body) {
 			$objComment = new ItemComment();
 			$objComment->set('body',$body);
 			$objComment->itemId = $objTask->id;
-			// problem seems to be that objComment->member->id does not exist
-			// objComment->id does
-			// see "pkg_project.php" line 438
-			// $objComment->member->id = $objUser->id;
-			$objComment->id = $objUser->id;
+			$objComment->memberid = $objUser->id;
 			if ($objComment->add()) {
 				$str = $GLOBALS['langMessage']['done_comment_added'];
 			}
