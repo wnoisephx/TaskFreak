@@ -1,3 +1,9 @@
+TaskFreak! Multi Users 0.7.0 
+============================
+Released: October, the 26th, 2016
+Updated to work with PHP 7
+
+
 TaskFreak! Multi Users 0.6.4
 ============================
 Released: June, the 27th, 2010
